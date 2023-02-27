@@ -69,7 +69,7 @@ h2{
     /* linear-gradients can be found through many online templete genarators */
     background: linear-gradient(90deg, rgb(18, 92, 255) 0%, rgb(0, 102, 255) 100%);
     border-radius: 50px;
-}
+}  
 
 .btn:hover{
     cursor: pointer;
