@@ -1,15 +1,20 @@
 const question = document.querySelector('#question');
 // shift + alt + down arrow copys and pastes the line down
 const choices = Array.from(document.querySelectorAll('.choice-text'));
-const progressText = document.querySelector('#progress-text');
+const progressText = document.querySelector('#progressText');
 const scoreText = document.querySelector('#score');
 const progressBarFull = document.querySelector('#progressBarFull');
+const timer = document.querySelector('#timer');
+
 
 let currentQuestion = {};
 let acceptingAnswers = true;
 let score = 0;
+let counter = 120
 let questionCounter = 0;
 let availableQuestions = [];
+
+
 
 let questions = [
     {
@@ -85,7 +90,7 @@ let questions = [
         answer: 4,
     },
     {
-        question: 'What is null in JavaSG GT65 MZT5cript?',
+        question: 'What is null in JavaScript?',
         choice1: 'Null means empty string value',
         choice2: 'Null means absence of a value',
         choice3: 'Null means unknown value',
@@ -100,21 +105,38 @@ const maxQuestions = 10;
 startGame = () => {
     questionCounter = 0
     score = 0
+    counter = 120
     availableQuestions = [...questions]
     getNewQuestions()
+    timerStart()
 };    
+
+timerStart = () => {
+    var interval = setInterval(() => {
+        timer.innerHTML = counter + 'seconds left'
+
+        if (counter < 1) {
+            timer.innerHTML = '0 seconds left'
+            clearInterval(interval)
+
+            return window.location.assign('/end.html')
+        } else {
+            counter--
+        }
+    },1000)
+}
 
 getNewQuestions = () => { 
     //keeps track of score
-    if(availableQuestions.length === 0 || questionCounter > MAX_QUESTIONS) {
+    if(availableQuestions.length === 0 || questionCounter > maxQuestions) {
         localStorage.setItem('mostRecentScore', score)
 
         return window.location.assign('/end.html')
     }
     //keeps track of number of question
     questionCounter++
-    progressText.innerText = `Questions ${questionCounter} of ${MAX_QUESTIONS}`
-    progressBarFull.style.width = `${(questionCounter/MAX_QUESTIONS) * 100}%`
+    progressText.innerText = `Questions ${questionCounter} of ${maxQuestions}`
+    progressBarFull.style.width = `${(questionCounter/maxQuestions) * 100}%`
 
     const questionIndex = Math.floor(Math.random() * availableQuestions.length)
     currentQuestion = availableQuestions[questionIndex]
@@ -142,7 +164,7 @@ choices.forEach(choice => {
         let classToApply = selectedAnswer == currentQuestion.answer ? 'correct' : 'incorrect'
 
         if(classToApply === 'correct') {
-            incrementScore(SCORE_POINTS)
+            incrementScore(scorePoints)
         }
 
         selectedChoice.parentElement.classList.add(classToApply)
@@ -160,3 +182,6 @@ incrementScore = num => {
     scoreText.innerText = score
 }
 
+
+
+startGame()
